@@ -7,11 +7,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Asset } from '@/types/asset';
+import { Employee, Department, ConditionOption } from '@/types/employee';
 import { Plus, Edit, Eye } from 'lucide-react';
 import AssetForm from './AssetForm';
 import AssetDetails from './AssetDetails';
 
-const AssetIdentification = () => {
+interface AssetIdentificationProps {
+  employees: Employee[];
+  departments: Department[];
+  conditions: ConditionOption[];
+}
+
+const AssetIdentification = ({ employees, departments, conditions }: AssetIdentificationProps) => {
   const [assets, setAssets] = useState<Asset[]>([
     {
       id: '1',
@@ -85,6 +92,9 @@ const AssetIdentification = () => {
     return (
       <AssetForm
         asset={selectedAsset}
+        employees={employees}
+        departments={departments}
+        conditions={conditions}
         onSave={selectedAsset ? handleEditAsset : handleAddAsset}
         onCancel={() => {
           setSelectedAsset(null);

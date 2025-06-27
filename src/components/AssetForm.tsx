@@ -5,16 +5,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Asset } from '@/types/asset';
+import { Employee, Department, ConditionOption } from '@/types/employee';
 import { ArrowLeft } from 'lucide-react';
 
 interface AssetFormProps {
   asset?: Asset | null;
+  employees: Employee[];
+  departments: Department[];
+  conditions: ConditionOption[];
   onSave: (asset: Asset) => void;
   onCancel: () => void;
 }
 
-const AssetForm = ({ asset, onSave, onCancel }: AssetFormProps) => {
+const AssetForm = ({ asset, employees, departments, conditions, onSave, onCancel }: AssetFormProps) => {
   const [formData, setFormData] = useState<Omit<Asset, 'id'>>({
     assetName: asset?.assetName || '',
     assetType: asset?.assetType || 'IT Equipment',
@@ -49,6 +54,10 @@ const AssetForm = ({ asset, onSave, onCancel }: AssetFormProps) => {
       [field]: value
     }));
   };
+
+  const activeEmployees = employees.filter(emp => emp.active);
+  const activeDepartments = departments.filter(dept => dept.active);
+  const activeConditions = conditions.filter(cond => cond.active);
 
   return (
     <div className="space-y-6">
@@ -141,12 +150,18 @@ const AssetForm = ({ asset, onSave, onCancel }: AssetFormProps) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="currentCondition">Current Condition</Label>
-                  <Input
-                    id="currentCondition"
-                    value={formData.currentCondition}
-                    onChange={(e) => handleInputChange('currentCondition', e.target.value)}
-                    required
-                  />
+                  <Select value={formData.currentCondition} onValueChange={(value) => handleInputChange('currentCondition', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select condition" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeConditions.map((condition) => (
+                        <SelectItem key={condition.id} value={condition.name}>
+                          {condition.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Status</Label>
@@ -208,30 +223,48 @@ const AssetForm = ({ asset, onSave, onCancel }: AssetFormProps) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="originallyIssuedTo">Originally Issued To</Label>
-                  <Input
-                    id="originallyIssuedTo"
-                    value={formData.originallyIssuedTo}
-                    onChange={(e) => handleInputChange('originallyIssuedTo', e.target.value)}
-                    required
-                  />
+                  <Select value={formData.originallyIssuedTo} onValueChange={(value) => handleInputChange('originallyIssuedTo', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select employee" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeEmployees.map((employee) => (
+                        <SelectItem key={employee.id} value={employee.name}>
+                          {employee.name} - {employee.department}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="currentlyIssuedTo">Currently Issued To</Label>
-                  <Input
-                    id="currentlyIssuedTo"
-                    value={formData.currentlyIssuedTo}
-                    onChange={(e) => handleInputChange('currentlyIssuedTo', e.target.value)}
-                    required
-                  />
+                  <Select value={formData.currentlyIssuedTo} onValueChange={(value) => handleInputChange('currentlyIssuedTo', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select employee" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeEmployees.map((employee) => (
+                        <SelectItem key={employee.id} value={employee.name}>
+                          {employee.name} - {employee.department}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="department">Department</Label>
-                  <Input
-                    id="department"
-                    value={formData.department}
-                    onChange={(e) => handleInputChange('department', e.target.value)}
-                    required
-                  />
+                  <Select value={formData.department} onValueChange={(value) => handleInputChange('department', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeDepartments.map((department) => (
+                        <SelectItem key={department.id} value={department.name}>
+                          {department.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="location">Location</Label>
@@ -244,12 +277,18 @@ const AssetForm = ({ asset, onSave, onCancel }: AssetFormProps) => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="conditionAtAssignment">Condition at Assignment</Label>
-                  <Input
-                    id="conditionAtAssignment"
-                    value={formData.conditionAtAssignment}
-                    onChange={(e) => handleInputChange('conditionAtAssignment', e.target.value)}
-                    required
-                  />
+                  <Select value={formData.conditionAtAssignment} onValueChange={(value) => handleInputChange('conditionAtAssignment', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select condition" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeConditions.map((condition) => (
+                        <SelectItem key={condition.id} value={condition.name}>
+                          {condition.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="dateOfIssue">Date of Issue</Label>
